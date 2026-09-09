@@ -148,7 +148,7 @@ int main() {
             return std::pair{command.twist, command.goal_reached};
         });
 
-    PurePursuitController pure_pursuit({0.55, 0.80, 1.8, 0.11, 0.75});
+    PurePursuitController pure_pursuit({0.30, 0.95, 1.8, 0.10, 0.75});
     const Metrics pursuit = simulate("pure_pursuit_smoothed", map, smoothed_path,
         [&pure_pursuit](const Pose2D& pose, const std::vector<Vec2>& path, double) {
             const PurePursuitCommand command = pure_pursuit.update(pose, path);

@@ -139,7 +139,7 @@ void test_smoothed_pure_pursuit_reaches_demo_goal() {
     constexpr double dt_s = 0.02;
     DifferentialDriveKinematics kinematics(track_width_m);
     DifferentialDriveOdometry odometry(track_width_m, {path.front().x, path.front().y, 0.0});
-    PurePursuitController controller({0.55, 0.80, 1.8, 0.11, 0.75});
+    PurePursuitController controller({0.30, 0.95, 1.8, 0.10, 0.75});
 
     Pose2D pose = odometry.pose();
     bool reached = false;

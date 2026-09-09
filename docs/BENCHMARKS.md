@@ -9,13 +9,13 @@ The v0.2 development slice plans on a one-cell inflated occupancy grid before sm
 | Controller | Waypoints | Steps | Travelled | Max cross-track | Final error | Collision-free | Goal reached |
 | --- | ---: | ---: | ---: | ---: | ---: | --- | --- |
 | PID waypoint baseline | 26 | 545 | 7.158981 m | 0.063708 m | 0.099468 m | yes | yes |
-| Pure pursuit + smoothed path | 5 | 646 | 7.286272 m | 0.679686 m | 0.109821 m | yes | yes |
+| Pure pursuit + smoothed path | 5 | 479 | 6.905655 m | 0.052827 m | 0.097605 m | yes | yes |
 
 ## Interpretation
 
-The new pipeline reduces the global waypoint count from 26 to 5 while preserving collision-free goal completion. It does **not** yet outperform the existing PID waypoint baseline on tracking error, travel distance, or settling steps. Pure pursuit therefore remains an experimental v0.2 controller rather than replacing the baseline.
+The new pipeline reduces the global waypoint count from 26 to 5 while preserving collision-free goal completion. On this deterministic reference fixture, the interpolated-lookahead pure-pursuit controller also improves the measured settling steps, travelled distance, maximum cross-track error, and final goal error relative to the PID waypoint baseline.
 
-That outcome is intentional evidence: the next tuning work should improve geometric tracking without weakening the collision-clearance contract or hiding regressions behind a visually smoother path.
+This is a regression result for the checked-in fixture, not a universal controller-performance claim. The PID follower remains available as the baseline, and future fixtures must preserve the collision-clearance contract rather than trading safety for a visually smoother path.
 
 ## Acceptance contract
 
