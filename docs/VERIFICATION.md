@@ -1,8 +1,7 @@
 # Verification record
 
 This file separates claims verified in the development environment from checks
-that are configured for GitHub-hosted runners and become authoritative only
-when those workflows execute on the public repository.
+verified on GitHub-hosted runners.
 
 ## Locally verified — 2026-09-09
 
@@ -24,16 +23,19 @@ The deterministic demo produced 21 planned cells, a 6.24264 m path cost,
 84 expanded A* nodes, 502 simulation steps at 20 ms, and 0.0985264 m final
 goal error.
 
-## Configured remote gates
+## GitHub-hosted verification — 2026-09-09
 
-The repository workflows additionally require:
+The first published `main` snapshot, commit
+`30d74616b07c4ea9251045c10ea667e835acaba9`, completed all configured remote
+quality gates successfully:
 
-- GCC and Clang CI on Ubuntu 24.04;
-- MSVC CI on Windows Server 2025;
-- ASan + UBSan;
-- installed-package consumer smoke test;
-- CodeQL C/C++ analysis;
-- tag-driven Linux and Windows package creation.
+| Remote gate | Result | Evidence |
+| --- | --- | --- |
+| Multi-compiler CI (GCC, Clang, MSVC) | PASS | [CI run #1](https://github.com/tahazarif10/robotics-control-core/actions/runs/34353178434) |
+| ASan + UBSan lane | PASS | [CI run #1](https://github.com/tahazarif10/robotics-control-core/actions/runs/34353178434) |
+| Installed-package consumer smoke test | PASS | [CI run #1](https://github.com/tahazarif10/robotics-control-core/actions/runs/34353178434) |
+| CodeQL C/C++ analysis | PASS | [CodeQL run #1](https://github.com/tahazarif10/robotics-control-core/actions/runs/34353178311) |
+| Dependabot GitHub Actions update checks | PASS | [run](https://github.com/tahazarif10/robotics-control-core/actions/runs/34353179604) / [run](https://github.com/tahazarif10/robotics-control-core/actions/runs/34353184519) |
 
-These remote lanes must not be described as passing until GitHub Actions has
-actually executed them on the published repository.
+The release workflow is tag-driven and remains intentionally unclaimed until a
+GitHub tag is published and the packaging workflow executes against that tag.
