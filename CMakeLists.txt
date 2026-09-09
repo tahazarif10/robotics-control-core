@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(robotics_control_core VERSION 0.1.0 LANGUAGES CXX)
+project(robotics_control_core VERSION 0.2.0 LANGUAGES CXX)
 
 option(RCC_BUILD_TESTS "Build unit tests" ON)
 option(RCC_ENABLE_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
