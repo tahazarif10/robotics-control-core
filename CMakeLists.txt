@@ -12,9 +12,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_library(robotics_control_core
     src/a_star.cpp
     src/differential_drive.cpp
+    src/map_inflation.cpp
     src/odometry.cpp
     src/path_follower.cpp
+    src/path_smoother.cpp
     src/pid.cpp
+    src/pure_pursuit.cpp
 )
 add_library(robotics::control ALIAS robotics_control_core)
 set_target_properties(robotics_control_core PROPERTIES EXPORT_NAME control)
@@ -52,13 +55,24 @@ add_executable(robotics_control_demo app/demo.cpp)
 target_link_libraries(robotics_control_demo PRIVATE robotics::control)
 rcc_enable_project_warnings(robotics_control_demo)
 
+add_executable(robotics_control_benchmark app/benchmark.cpp)
+target_link_libraries(robotics_control_benchmark PRIVATE robotics::control)
+rcc_enable_project_warnings(robotics_control_benchmark)
+
 if(RCC_BUILD_TESTS)
     include(CTest)
     enable_testing()
     add_executable(robotics_control_tests tests/test_main.cpp)
     target_link_libraries(robotics_control_tests PRIVATE robotics::control)
     rcc_enable_project_warnings(robotics_control_tests)
+
+    add_executable(robotics_control_v02_tests tests/test_v02.cpp)
+    target_link_libraries(robotics_control_v02_tests PRIVATE robotics::control)
+    rcc_enable_project_warnings(robotics_control_v02_tests)
+
     add_test(NAME robotics_control_tests COMMAND robotics_control_tests)
+    add_test(NAME robotics_control_v02_tests COMMAND robotics_control_v02_tests)
+    add_test(NAME robotics_control_benchmark COMMAND robotics_control_benchmark)
 endif()
 
 include(GNUInstallDirs)
