@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/robotics_control_coreTargets.cmake")
+check_required_components(robotics_control_core)

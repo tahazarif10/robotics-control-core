@@ -1,0 +1,12 @@
+/build/
+/.cache/
+/.idea/
+/.vscode/
+*.user
+*.suo
+*.swp
+trajectory.csv
+trajectory.png
+__pycache__/
+planned_path.csv
+map.csv

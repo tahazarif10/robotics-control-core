@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    name: Linux / ${{ matrix.compiler }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Ninja
+        run: sudo apt-get update && sudo apt-get install -y ninja-build
+      - name: Select compiler
+        run: |
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            echo "CC=clang" >> "$GITHUB_ENV"
+            echo "CXX=clang++" >> "$GITHUB_ENV"
+          else
+            echo "CC=gcc" >> "$GITHUB_ENV"
+            echo "CXX=g++" >> "$GITHUB_ENV"
+          fi
+      - name: Configure
+        run: cmake --preset release
+      - name: Build
+        run: cmake --build --preset release --parallel
+      - name: Test
+        run: ctest --preset release
+      - name: Run deterministic demo
+        run: ./build/release/robotics_control_demo trajectory.csv planned_path.csv map.csv
+      - name: Install package
+        run: cmake --install build/release --prefix "$RUNNER_TEMP/rcc-install"
+      - name: Build standalone package consumer
+        run: |
+          cmake -S examples/consumer -B build/consumer -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$RUNNER_TEMP/rcc-install"
+          cmake --build build/consumer --parallel
+          ./build/consumer/robotics_control_consumer
+
+  sanitizers:
+    name: Linux / ASan + UBSan
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - run: sudo apt-get update && sudo apt-get install -y ninja-build
+      - run: cmake --preset asan
+      - run: cmake --build --preset asan --parallel
+      - run: ctest --preset asan
+
+  windows:
+    name: Windows / MSVC
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Configure
+        shell: pwsh
+        run: cmake -S . -B build/windows -G Ninja -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        shell: pwsh
+        run: cmake --build build/windows --parallel
+      - name: Test
+        shell: pwsh
+        run: ctest --test-dir build/windows --output-on-failure
+      - name: Demo
+        shell: pwsh
+        run: .\build\windows\robotics_control_demo.exe trajectory.csv planned_path.csv map.csv
