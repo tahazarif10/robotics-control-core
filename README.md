@@ -7,13 +7,17 @@
 ![Version](https://img.shields.io/badge/version-0.2.0-blueviolet)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
+[**Portfolio**](https://github.com/tahazarif10) · [**Resume**](https://github.com/tahazarif10/tahazarif10/blob/main/RESUME.md) · [**Evidence**](https://github.com/tahazarif10/tahazarif10/blob/main/EVIDENCE.md) · [**LinkedIn**](https://www.linkedin.com/in/taha-zarif-bba94b397/) · [**ROS 2 integration project**](https://github.com/tahazarif10/ros2-autonomous-mobile-robot)
+
 **A deterministic C++20 navigation and control core for a differential-drive mobile robot.**
 
-This repository is intentionally middleware-independent: it exposes the robotics
-algorithms, numerical contracts, safety boundaries, tests, and packaging underneath
-a future ROS 2 application instead of hiding them inside framework callbacks.
+This repository is intentionally middleware-independent: it exposes the robotics algorithms, numerical contracts, safety boundaries, tests, and packaging underneath a ROS 2 application instead of hiding them inside framework callbacks.
 
-## What it proves
+## Where this fits
+
+`robotics-control-core` is the reusable algorithm layer of a larger robotics portfolio. The companion [ROS 2 Autonomous Mobile Robot](https://github.com/tahazarif10/ros2-autonomous-mobile-robot) consumes this library at a pinned commit through a thin lifecycle-aware adapter, keeping control math separate from middleware integration.
+
+## Engineering scope
 
 - Modern **C++20** and explicit API contracts
 - **A\*** path planning on occupancy grids
@@ -55,24 +59,18 @@ Current Pose ──────────────────────�
                                                           └──> Goal
 ```
 
-The original occupancy grid remains the collision oracle during regression tests.
-Planning can use an inflated grid to encode controller clearance without redefining
-what counts as an obstacle.
+The original occupancy grid remains the collision oracle during regression tests. Planning can use an inflated grid to encode controller clearance without redefining what counts as an obstacle.
 
 ## Deterministic evidence
 
-The v0.2 benchmark runs both controllers against the same static map, 20 ms integration
-step, differential-drive kinematics, and odometry model:
+The v0.2 benchmark runs both controllers against the same static map, 20 ms integration step, differential-drive kinematics, and odometry model:
 
 | Controller | Waypoints | Steps | Travel | Max cross-track | Final error | Collision-free | Goal |
 | --- | ---: | ---: | ---: | ---: | ---: | --- | --- |
 | PID waypoint baseline | 26 | 545 | 7.158981 m | 0.063708 m | 0.099468 m | yes | yes |
 | Pure pursuit + smoothed path | **5** | **479** | **6.905655 m** | **0.052827 m** | **0.097605 m** | yes | yes |
 
-These are deterministic regression measurements for the checked-in fixture, not
-hardware-performance or universal controller-superiority claims. See
-[Benchmark evidence](docs/BENCHMARKS.md) and
-[Verification record](docs/VERIFICATION.md).
+These are deterministic regression measurements for the checked-in fixture, not hardware-performance or universal controller-superiority claims. See [Benchmark evidence](docs/BENCHMARKS.md) and [Verification record](docs/VERIFICATION.md).
 
 ![Deterministic trajectory demo](docs/assets/demo_trajectory.svg)
 
@@ -122,8 +120,7 @@ docs/                       architecture, benchmarks, verification
 
 ## Design decisions
 
-- The core has **no ROS 2 dependency**, so planning/control logic is unit-testable and
-  reusable later from `rclcpp` nodes.
+- The core has **no ROS 2 dependency**, so planning/control logic is unit-testable and reusable from `rclcpp` nodes.
 - Grid A* and the smoother reject diagonal corner cutting.
 - Controller clearance is explicit through occupancy inflation.
 - The original occupancy map remains the collision oracle in end-to-end regression.
@@ -132,11 +129,7 @@ docs/                       architecture, benchmarks, verification
 - Public names encode SI units where ambiguity is likely.
 - Benchmark results are documented as fixture-level evidence, not generalized claims.
 
-See [Architecture](docs/ARCHITECTURE.md),
-[Engineering contract](docs/ENGINEERING.md),
-[Benchmark evidence](docs/BENCHMARKS.md),
-[Verification record](docs/VERIFICATION.md), and
-[Changelog](CHANGELOG.md).
+See [Architecture](docs/ARCHITECTURE.md), [Engineering contract](docs/ENGINEERING.md), [Benchmark evidence](docs/BENCHMARKS.md), [Verification record](docs/VERIFICATION.md), and [Changelog](CHANGELOG.md).
 
 ## Consume as a package
 
@@ -147,9 +140,7 @@ find_package(robotics_control_core 0.2 CONFIG REQUIRED)
 target_link_libraries(my_robot PRIVATE robotics::control)
 ```
 
-A standalone smoke consumer lives in [`examples/consumer`](examples/consumer) and
-is rebuilt against the installed package in CI. This verifies the install/export
-contract rather than only the in-tree build.
+A standalone smoke consumer lives in [`examples/consumer`](examples/consumer) and is rebuilt against the installed package in CI. This verifies the install/export contract rather than only the in-tree build.
 
 ## Roadmap
 
